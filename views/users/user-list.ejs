@@ -1,0 +1,55 @@
+<%- include('../head') %>
+<%- include('../header') %>
+
+<main class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-people me-2 text-secondary"></i>Utilisateurs <span class="badge bg-secondary"><%= count %></span></h2>
+    <a href="/users/add" class="btn btn-secondary"><i class="bi bi-person-plus me-1"></i>Ajouter</a>
+  </div>
+
+  <form class="mb-4 d-flex gap-2" method="GET" action="/users">
+    <input type="text" name="search" class="form-control" placeholder="Rechercher par nom..." value="<%= search %>" />
+    <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+    <% if (search) { %><a href="/users" class="btn btn-outline-danger"><i class="bi bi-x"></i></a><% } %>
+  </form>
+
+  <% if (users.length === 0) { %>
+    <div class="alert alert-info">Aucun utilisateur trouvé.</div>
+  <% } else { %>
+    <div class="row g-4">
+      <% users.forEach(user => { %>
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+              <div class="mb-2">
+                <i class="bi bi-person-circle display-4 text-secondary"></i>
+              </div>
+              <h5 class="card-title"><%= user.fullname %></h5>
+              <p class="card-text text-muted small"><%= user.email %></p>
+              <% if (user.Role) { %>
+                <span class="badge <%= user.Role.name === 'admin' ? 'bg-danger' : 'bg-primary' %>"><%= user.Role.name %></span>
+              <% } %>
+            </div>
+            <div class="card-footer d-flex justify-content-end gap-2">
+              <a href="/users/edit/<%= user.id %>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+              <form action="/users/delete/<%= user.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer cet utilisateur ?')">
+                <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <nav class="mt-4">
+      <ul class="pagination justify-content-center">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === page ? 'active' : '' %>">
+            <a class="page-link" href="/users?page=<%= i %>&search=<%= search %>"><%= i %></a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  <% } %>
+</main>
+
+<%- include('../footer') %>

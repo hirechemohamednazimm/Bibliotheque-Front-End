@@ -1,0 +1,62 @@
+<%- include('../head') %>
+<%- include('../header') %>
+
+<main class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-tags me-2 text-info"></i>Catégories <span class="badge bg-secondary"><%= count %></span></h2>
+    <% if (loggedUser && loggedUser.role === 'admin') { %>
+      <a href="/categories/add" class="btn btn-info text-white"><i class="bi bi-plus-circle me-1"></i>Ajouter</a>
+    <% } %>
+  </div>
+
+  <form class="mb-4 d-flex gap-2" method="GET" action="/categories">
+    <input type="text" name="search" class="form-control" placeholder="Rechercher..." value="<%= search %>" />
+    <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+    <% if (search) { %><a href="/categories" class="btn btn-outline-danger"><i class="bi bi-x"></i></a><% } %>
+  </form>
+
+  <% if (categories.length === 0) { %>
+    <div class="alert alert-info">Aucune catégorie trouvée.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Nom</th>
+            <% if (loggedUser && loggedUser.role === 'admin') { %>
+              <th class="text-end">Actions</th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% categories.forEach(cat => { %>
+            <tr>
+              <td><%= cat.id %></td>
+              <td><strong><%= cat.name %></strong></td>
+              <% if (loggedUser && loggedUser.role === 'admin') { %>
+                <td class="text-end">
+                  <a href="/categories/edit/<%= cat.id %>" class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil"></i></a>
+                  <form action="/categories/delete/<%= cat.id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette catégorie ?')">
+                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              <% } %>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <nav>
+      <ul class="pagination justify-content-center">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === page ? 'active' : '' %>">
+            <a class="page-link" href="/categories?page=<%= i %>&search=<%= search %>"><%= i %></a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  <% } %>
+</main>
+
+<%- include('../footer') %>

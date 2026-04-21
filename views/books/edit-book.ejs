@@ -1,0 +1,60 @@
+<%- include('../head') %>
+<%- include('../header') %>
+
+<main class="container my-4" style="max-width: 600px;">
+  <h2 class="mb-4"><i class="bi bi-pencil text-warning me-2"></i>Modifier le livre</h2>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger">
+      <ul class="mb-0"><% errors.forEach(e => { %><li><%= e.msg %></li><% }) %></ul>
+    </div>
+  <% } %>
+
+  <form action="/books/edit/<%= book.id %>?_method=PUT" method="POST" enctype="multipart/form-data" novalidate>
+    <div class="mb-3">
+      <label class="form-label">Titre <span class="text-danger">*</span></label>
+      <input type="text" name="title" class="form-control" value="<%= book.title %>" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">ISBN <span class="text-danger">*</span></label>
+      <input type="text" name="isbn" class="form-control" value="<%= book.isbn %>" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Année de publication <span class="text-danger">*</span></label>
+      <input type="number" name="publishedYear" class="form-control" value="<%= book.publishedYear %>" min="1000" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Auteur</label>
+      <select name="authorId" class="form-select">
+        <% authors.forEach(a => { %>
+          <option value="<%= a.id %>" <%= book.authorId === a.id ? 'selected' : '' %>><%= a.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Catégorie</label>
+      <select name="categoryId" class="form-select">
+        <% categories.forEach(c => { %>
+          <option value="<%= c.id %>" <%= book.categoryId === c.id ? 'selected' : '' %>><%= c.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Image de couverture</label>
+      <% if (book.image) { %>
+        <div class="mb-2">
+          <img src="<%= book.image %>" alt="Couverture actuelle" style="height:120px; object-fit:cover; border-radius:6px;" />
+          <div class="form-text">Image actuelle — choisir un nouveau fichier pour la remplacer</div>
+        </div>
+      <% } %>
+      <input type="file" name="image" class="form-control" accept="image/jpeg,image/jpg,image/png,image/gif" />
+      <div class="form-text">Formats acceptés : jpg, png, gif — max 10 Mo</div>
+    </div>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-warning"><i class="bi bi-check-circle me-1"></i>Mettre à jour</button>
+      <a href="/books" class="btn btn-secondary">Annuler</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../footer') %>

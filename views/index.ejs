@@ -1,0 +1,114 @@
+<%- include('head') %>
+<%- include('header') %>
+
+<main class="container my-5">
+
+  <% if (!loggedUser) { %>
+    <!-- Page d'accueil non connecté -->
+    <div class="text-center py-5">
+      <i class="bi bi-book-half display-1 text-primary"></i>
+      <h1 class="display-5 fw-bold mt-3">Bienvenue à la Bibliothèque</h1>
+      <p class="lead text-muted mb-4">Accédez à notre catalogue de livres, gérez vos emprunts et réservations en ligne.</p>
+      <a href="/login" class="btn btn-primary btn-lg px-5">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+      </a>
+    </div>
+  <% } else { %>
+    <!-- Page d'accueil connecté -->
+    <div class="mb-5">
+      <h2 class="fw-bold">Bonjour, <%= loggedUser.fullname %> <span class="badge bg-<%= loggedUser.role === 'admin' ? 'danger' : 'secondary' %> fs-6"><%= loggedUser.role %></span></h2>
+      <p class="text-muted">Que souhaitez-vous faire aujourd'hui ?</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Livres — tout le monde -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center py-4">
+            <i class="bi bi-journals display-4 text-primary"></i>
+            <h5 class="card-title mt-3">Catalogue de livres</h5>
+            <p class="card-text text-muted small">Parcourez notre collection de livres disponibles.</p>
+            <a href="/books" class="btn btn-primary mt-2">Voir les livres</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emprunts — tout le monde -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center py-4">
+            <i class="bi bi-arrow-left-right display-4 text-warning"></i>
+            <h5 class="card-title mt-3">Mes emprunts</h5>
+            <p class="card-text text-muted small">Consultez et gérez vos emprunts en cours.</p>
+            <a href="/loans" class="btn btn-warning text-dark mt-2">Voir mes emprunts</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avis — tout le monde -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center py-4">
+            <i class="bi bi-star display-4 text-warning"></i>
+            <h5 class="card-title mt-3">Mes avis</h5>
+            <p class="card-text text-muted small">Donnez votre avis sur les livres lus.</p>
+            <a href="/reviews" class="btn btn-outline-warning mt-2">Voir mes avis</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Amendes — tout le monde -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center py-4">
+            <i class="bi bi-exclamation-circle display-4 text-danger"></i>
+            <h5 class="card-title mt-3">Mes amendes</h5>
+            <p class="card-text text-muted small">Consultez vos amendes en cours.</p>
+            <a href="/fines" class="btn btn-outline-danger mt-2">Voir mes amendes</a>
+          </div>
+        </div>
+      </div>
+
+      <% if (loggedUser.role === 'admin') { %>
+        <!-- Auteurs — admin -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center py-4">
+              <i class="bi bi-person-lines-fill display-4 text-success"></i>
+              <h5 class="card-title mt-3">Auteurs</h5>
+              <p class="card-text text-muted small">Gérez les auteurs du catalogue.</p>
+              <a href="/authors" class="btn btn-success mt-2">Gérer</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catégories — admin -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center py-4">
+              <i class="bi bi-tags display-4 text-info"></i>
+              <h5 class="card-title mt-3">Catégories</h5>
+              <p class="card-text text-muted small">Gérez les catégories de livres.</p>
+              <a href="/categories" class="btn btn-info text-white mt-2">Gérer</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Utilisateurs — admin -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center py-4">
+              <i class="bi bi-people display-4 text-dark"></i>
+              <h5 class="card-title mt-3">Utilisateurs</h5>
+              <p class="card-text text-muted small">Gérez les comptes des membres.</p>
+              <a href="/users" class="btn btn-dark mt-2">Gérer</a>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+
+</main>
+
+<%- include('footer') %>

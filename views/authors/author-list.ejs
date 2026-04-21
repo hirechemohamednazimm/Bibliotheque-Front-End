@@ -1,0 +1,74 @@
+<%- include('../head') %>
+<%- include('../header') %>
+
+<main class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-person-lines-fill me-2 text-success"></i>Auteurs <span class="badge bg-secondary"><%= count %></span></h2>
+    <% if (loggedUser && loggedUser.role === 'admin') { %>
+      <a href="/authors/add" class="btn btn-success"><i class="bi bi-plus-circle me-1"></i>Ajouter</a>
+    <% } %>
+  </div>
+
+  <form class="mb-4 d-flex gap-2" method="GET" action="/authors">
+    <input type="text" name="search" class="form-control" placeholder="Rechercher par nom..." value="<%= search %>" />
+    <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+    <% if (search) { %><a href="/authors" class="btn btn-outline-danger"><i class="bi bi-x"></i></a><% } %>
+  </form>
+
+  <% if (authors.length === 0) { %>
+    <div class="alert alert-info">Aucun auteur trouvé.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Photo</th>
+            <th>Nom</th>
+            <th>Biographie</th>
+            <% if (loggedUser && loggedUser.role === 'admin') { %>
+              <th class="text-end">Actions</th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% authors.forEach(author => { %>
+            <tr>
+              <td><%= author.id %></td>
+              <td>
+                <% if (author.image) { %>
+                  <img src="<%= author.image %>" alt="<%= author.name %>" style="width:50px;height:50px;object-fit:cover;border-radius:50%;" />
+                <% } else { %>
+                  <div class="bg-secondary d-inline-flex align-items-center justify-content-center rounded-circle" style="width:50px;height:50px;">
+                    <i class="bi bi-person-fill text-white"></i>
+                  </div>
+                <% } %>
+              </td>
+              <td><strong><%= author.name %></strong></td>
+              <td><small class="text-muted"><%= author.bio ? author.bio.substring(0, 80) + '...' : '—' %></small></td>
+              <% if (loggedUser && loggedUser.role === 'admin') { %>
+                <td class="text-end">
+                  <a href="/authors/edit/<%= author.id %>" class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil"></i></a>
+                  <form action="/authors/delete/<%= author.id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cet auteur ?')">
+                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              <% } %>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <nav>
+      <ul class="pagination justify-content-center">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === page ? 'active' : '' %>">
+            <a class="page-link" href="/authors?page=<%= i %>&search=<%= search %>"><%= i %></a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  <% } %>
+</main>
+
+<%- include('../footer') %>

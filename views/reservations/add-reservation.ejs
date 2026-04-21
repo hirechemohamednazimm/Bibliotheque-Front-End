@@ -1,0 +1,69 @@
+<%- include('../head') %>
+<%- include('../header') %>
+
+<main class="container my-4" style="max-width: 600px;">
+  <h2 class="mb-4"><i class="bi bi-calendar-plus text-info me-2"></i>Ajouter une réservation</h2>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger">
+      <ul class="mb-0"><% errors.forEach(e => { %><li><%= e.msg %></li><% }) %></ul>
+    </div>
+  <% } %>
+
+  <form action="/reservations/add" method="POST" novalidate>
+    <div class="mb-3">
+      <label class="form-label">Livre <span class="text-danger">*</span></label>
+      <select name="bookId" class="form-select" required>
+        <option value="">-- Choisir un livre --</option>
+        <% books.forEach(b => { %>
+          <option value="<%= b.id %>"><%= b.title %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <% if (loggedUser && loggedUser.role === 'admin' && users) { %>
+      <div class="mb-3">
+        <label class="form-label">Utilisateur <span class="text-danger">*</span></label>
+        <select name="userId" class="form-select" required>
+          <option value="">-- Choisir un utilisateur --</option>
+          <% users.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.fullname %></option>
+          <% }) %>
+        </select>
+      </div>
+    <% } else { %>
+      <div class="mb-3">
+        <label class="form-label">Réservé par</label>
+        <div class="form-control bg-light"><i class="bi bi-person-circle me-1"></i><%= loggedUser ? loggedUser.fullname : '' %></div>
+      </div>
+    <% } %>
+
+    <div class="mb-3">
+      <label class="form-label">Date de réservation <span class="text-danger">*</span></label>
+      <input type="date" name="reservationDate" class="form-control" value="<%= today %>" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Date d'expiration <span class="text-danger">*</span></label>
+      <input type="date" name="expiryDate" class="form-control" value="<%= expiryDate %>" required />
+    </div>
+
+    <% if (loggedUser && loggedUser.role === 'admin') { %>
+      <div class="mb-3">
+        <label class="form-label">Statut</label>
+        <select name="status" class="form-select">
+          <option value="pending" selected>pending</option>
+          <option value="confirmed">confirmed</option>
+          <option value="cancelled">cancelled</option>
+          <option value="expired">expired</option>
+        </select>
+      </div>
+    <% } %>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-info text-white"><i class="bi bi-check-circle me-1"></i>Enregistrer</button>
+      <a href="/reservations" class="btn btn-secondary">Annuler</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../footer') %>

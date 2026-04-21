@@ -1,0 +1,70 @@
+<%- include('../head') %>
+<%- include('../header') %>
+
+<main class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-exclamation-circle me-2 text-danger"></i>Amendes <span class="badge bg-secondary"><%= count %></span></h2>
+    <% if (loggedUser && loggedUser.role === 'admin') { %>
+      <a href="/fines/add" class="btn btn-danger"><i class="bi bi-plus-circle me-1"></i>Ajouter</a>
+    <% } %>
+  </div>
+
+  <% if (fines.length === 0) { %>
+    <div class="alert alert-info">Aucune amende trouvée.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <% if (loggedUser && loggedUser.role === 'admin') { %>
+              <th>Utilisateur</th>
+            <% } %>
+            <th>Emprunt #</th>
+            <th>Montant</th>
+            <th>Raison</th>
+            <th>Statut</th>
+            <% if (loggedUser && loggedUser.role === 'admin') { %>
+              <th class="text-end">Actions</th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% fines.forEach(f => { %>
+            <tr>
+              <td><%= f.id %></td>
+              <% if (loggedUser && loggedUser.role === 'admin') { %>
+                <td><%= f.User ? f.User.fullname : '—' %></td>
+              <% } %>
+              <td>#<%= f.loanId %></td>
+              <td><strong><%= f.amount %> $</strong></td>
+              <td><small><%= f.reason %></small></td>
+              <td>
+                <span class="badge <%= f.status === 'paid' ? 'bg-success' : 'bg-danger' %>"><%= f.status %></span>
+              </td>
+              <% if (loggedUser && loggedUser.role === 'admin') { %>
+                <td class="text-end">
+                  <a href="/fines/edit/<%= f.id %>" class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil"></i></a>
+                  <form action="/fines/delete/<%= f.id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette amende ?')">
+                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              <% } %>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <nav>
+      <ul class="pagination justify-content-center">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === page ? 'active' : '' %>">
+            <a class="page-link" href="/fines?page=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  <% } %>
+</main>
+
+<%- include('../footer') %>
