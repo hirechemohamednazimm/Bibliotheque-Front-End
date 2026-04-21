@@ -15,6 +15,11 @@ const Author = sequelize.define("Author", {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  /** Photo de l'auteur (upload via Multer) */
+  image: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
 module.exports = Author;

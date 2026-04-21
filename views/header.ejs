@@ -1,0 +1,44 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/"><i class="bi bi-book-half me-2"></i>Bibliothèque</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/books"><i class="bi bi-journals me-1"></i>Livres</a></li>
+        <% if (loggedUser && loggedUser.role === 'admin') { %>
+          <li class="nav-item"><a class="nav-link" href="/authors"><i class="bi bi-person-lines-fill me-1"></i>Auteurs</a></li>
+          <li class="nav-item"><a class="nav-link" href="/categories"><i class="bi bi-tags me-1"></i>Catégories</a></li>
+        <% } %>
+        <li class="nav-item"><a class="nav-link" href="/loans"><i class="bi bi-arrow-left-right me-1"></i>Emprunts</a></li>
+        <li class="nav-item"><a class="nav-link" href="/reviews"><i class="bi bi-star me-1"></i>Avis</a></li>
+        <li class="nav-item"><a class="nav-link" href="/fines"><i class="bi bi-exclamation-circle me-1"></i>Amendes</a></li>
+        <% if (loggedUser && loggedUser.role === 'admin') { %>
+          <li class="nav-item"><a class="nav-link" href="/users"><i class="bi bi-people me-1"></i>Utilisateurs</a></li>
+        <% } %>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <% if (loggedUser) { %>
+          <li class="nav-item">
+            <span class="nav-link text-light">
+              <i class="bi bi-person-circle me-1"></i><%= loggedUser.fullname %>
+              <% if (loggedUser.role === 'admin') { %>
+                <span class="badge bg-danger ms-1">admin</span>
+              <% } else { %>
+                <span class="badge bg-secondary ms-1">user</span>
+              <% } %>
+            </span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-warning" href="/logout"><i class="bi bi-box-arrow-right me-1"></i>Déconnexion</a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/login"><i class="bi bi-box-arrow-in-right me-1"></i>Connexion</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>

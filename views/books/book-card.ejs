@@ -1,0 +1,37 @@
+<div class="col-md-4 col-sm-6">
+  <div class="card h-100 shadow-sm">
+    <% if (book.image) { %>
+      <img src="<%= book.image %>" class="card-img-top" alt="<%= book.title %>" style="height:200px; object-fit:cover;" />
+    <% } else { %>
+      <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;">
+        <i class="bi bi-book text-secondary" style="font-size:3rem;"></i>
+      </div>
+    <% } %>
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <h5 class="card-title mb-0"><%= book.title %></h5>
+        <% if (loggedUser && loggedUser.role === 'admin') { %>
+          <span class="badge <%= book.isBorrowed ? 'bg-danger' : 'bg-success' %> ms-2 flex-shrink-0">
+            <%= book.isBorrowed ? 'Emprunté' : 'Disponible' %>
+          </span>
+        <% } %>
+      </div>
+      <p class="card-text mb-1"><small class="text-muted">ISBN : <%= book.isbn %></small></p>
+      <p class="card-text mb-1"><small class="text-muted">Année : <%= book.publishedYear %></small></p>
+      <% if (book.Author) { %>
+        <p class="card-text mb-1"><small class="text-muted"><i class="bi bi-person me-1"></i><%= book.Author.name %></small></p>
+      <% } %>
+      <% if (book.Category) { %>
+        <span class="badge bg-info text-dark"><%= book.Category.name %></span>
+      <% } %>
+    </div>
+    <% if (loggedUser && loggedUser.role === 'admin') { %>
+      <div class="card-footer d-flex justify-content-end gap-2">
+        <a href="/books/edit/<%= book.id %>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+        <form action="/books/delete/<%= book.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer ce livre ?')">
+          <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</div>
